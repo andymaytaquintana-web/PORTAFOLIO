@@ -1,0 +1,44 @@
+PD1 <- read_xlsx("PD1.xlsx", sheet = 2)
+
+
+#Pregunta 1
+sur<-subset(PD1,sede=="Sur")
+cor.test(sur$s1,sur$s2,
+         alternative="g",method="s")
+
+#Pregunta 2
+este<-subset(PD1,sede=="Este")
+library(DescTools)
+StuartMaxwellTest(x = este$consulta1,y = este$consulta2)
+
+#Pregunta 3
+centro<-subset(PD1,sede=="Centro")
+tabla1<-table(centro$contacto)
+prob<-c(0.3,0.2,0.5)
+chisq.test(tabla1,p=prob)
+library(RVAideMemoire)
+multinomial.test(as.vector(tabla1),prob)
+
+#Pregunta 4
+norte<-subset(PD1,sede=="Norte")
+sum(norte$pago=="Efectivo")
+binom.test(x = 46,n = 134,p = 0.35,alternative = "l")
+binom.test(x = 88,n = 134,conf.level = 0.95)
+
+#Pregunta 5
+library(clipr)
+dato_sin_este <- read_clip_tbl()
+sineste<-subset(PD1,sede!="Este")
+mantelhaen.test(dato_sin_este$género,dato_sin_este$actividad=="Yoga",dato_sin_este$sede,correct = T)
+
+#Pregunta 6
+surnorte <- subset(PD1, sede == "Sur" | sede == "Norte")
+surnorte_principiantes <- ifelse(surnorte$nivel =="Principiante", "Principiante", "No_Principiante")
+table(surnorte$sede, surnorte_principiantes)
+tabla <- matrix(c(30, 77, 34, 100), 2,2)
+fisher.test(tabla, alternative = "l")
+
+table(PD1$nivel,PD1$sede)
+addmargins(table(PD1$nivel,PD1$sede))
+tabla<-matrix(c(30,77,34,100),2,2)
+fisher.test(tabla,alternative="l")

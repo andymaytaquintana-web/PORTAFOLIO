@@ -1,0 +1,182 @@
+caso1 <- read_xlsx("PD1.xlsx", sheet = 1)
+
+# EJERCICIO 1 - BINOMIAL
+
+sjl <- subset(caso1, Distrito == "San Juan de Lurigancho")
+table(sjl$Gas)
+binom.test(x = 48,n = 94,p = 0.3, alternative = "l")
+
+48+46
+# IC al 97%
+binom.test(x = 48,n = 94, conf.level = 0.97)
+
+'''
+Ho: Pi_sjl = 0.3
+H1: pi_sjl < 0.3
+
+alfa = 0.03
+
+pvalor = 1 > 0.03
+
+conclusión: A un alfa = 0.03, No podemos afirmar que la propoción de hogares
+del distrito de Sjl que poseen gas sea menor al 30%.
+'''
+
+# EJERCICIO 2 - STUART MAXWELL
+
+library(DescTools)
+agustino <- subset(caso1, Distrito == "El Agustino")
+StuartMaxwellTest(agustino$Uso1,agustino$Uso2)
+
+'''
+H0: La campaña tuvo un efecto significativo sobre el uso de energia
+    en los hogares del distrito del Agustino
+H1: La campaña tuvo no un efecto significativo sobre el uso de energia
+    en los hogares del distrito del Agustino
+
+alfa = 0.03
+
+pvalor = 0.9802 > 0.03
+
+conclusión: A un alfa = 0.03, No podemos afirmar que la campaña tuvo no un 
+efecto significativo sobre el uso de energia en los hogares del distrito del Agustino
+'''
+
+# EJERCICIO 3 - PRUEBA DE FRECUENCIAS
+
+sanita <- subset(caso1, Distrito == "Santa Anita")
+library(RVAideMemoire)
+table(sanita$Uso1)
+probs <- c(0.5,0.3,0.2)
+multinomial.test(x = as.vector(table(sanita$Uso1)), p = probs)
+
+'''
+H0: pbajo = 0.3 , pmedio = 0.2 , palto =  0.5
+H1: Al menos un pi es diferente a los valores establecidos.
+
+alfa = 0.03
+
+pvalor = 0.0002354 < 0.03
+
+COnclusión: A un alfa = 0.03, podemos afirmar que al menos una propoción es
+diferente a los valores establecidos, por lo tanto la sospecha del gerente
+es cierta.
+'''
+
+
+# EJERCICIO 4 - HOMOGENEIDAD DE SUBPOBLACIONES
+
+table(caso1$Distrito, caso1$Gas)
+res<-chisq.test(table(caso1$Distrito, caso1$Gas))
+chisq.test(table(caso1$Gas, caso1$Distrito), correct = TRUE)
+res$expected
+
+'''
+H0: p1 = p2 = p3 = p4
+H1: la proporción de hogares que cuentan con el servicio de gas natural no es 
+    la misma en al menos uno de los distritos en estudio
+    
+alfa = 0.03
+
+pvalor = 0.2365 > 0.03
+
+Conclusión: A un alfa = 0.03, No podemos afirmar que la propoción de hogares que
+cuentan con el servicio de gas natural no es la misma en al menos uno de los
+distritos en estudio.
+'''
+
+
+# EJERCICIO 5 - MHC
+
+table(caso1$Distrito, caso1$Reclamo)
+library(exact2x2)
+mantelhaen.test(caso1$Gas,as.vector(caso1$Reclamo),caso1$Distrito)
+
+'''
+H0: p1i = p2j
+H1: p1i != p2j
+
+alfa = 0.03
+
+pvalor = 0.5413 > 0.03
+
+Conclusión: A un alfa = 0.03, No podemos afirmar que la proporción de hogares 
+que tienen conexión a gas natural y han tenido reclamos sobre el corte de 
+energía en el último año no es la misma en al menos uno de los distritos en 
+estudio, por lo tanto no se debe solicitar la revisión de los medidores de
+electricidad.
+'''
+
+
+# EJERCICIO 6 - PRUEBA EXACTA DE FISHER
+
+table(caso1$Distrito, caso1$Uso2)
+matriz <- matrix(c(36,71,33,62),nrow = 2,
+                 ncol = 2)
+fisher.exact(matriz, alternative = "l")
+fisher.test(matriz, alternative = "l")
+
+'''
+H0: P_agus_bajo = P_sta_bajo
+H1: P_agus_bajo < P_sta_bajo
+
+alfa = 0.03
+
+pvalor = 0.4938 > 0.03
+
+Conclusión: A un alfa = 0.03, No podemos afirmar que la proporción de hogares que
+consideran que su consumo de energía eléctrica es bajo en el mes de marzo es 
+menor en el distrito de El Agustino que en el distrito de Santa Anita, por lo 
+tanto la afirmación del gerente es incorrecta.
+'''
+
+# EJERCICIO 7 - PRUEBA DE INDEPENDENCIA
+
+# prueba de independencia
+
+olivos <- subset(caso1, Distrito == "Los Olivos")
+table(olivos$Antigüedad, olivos$Uso1)
+chisq.test(olivos$Antigüedad, olivos$Uso1, correct = T)
+
+# indicadores
+a1 <- factor(olivos$Antigüedad,
+                levels = c("Mas de 30 años",
+                           "Entre 10 y 20 años",
+                           "Menos de 10 años"),
+                ordered = TRUE)
+
+a2 <- factor(olivos$Uso1, levels = c("bajo","medio","alto"),
+             ordered = TRUE)
+a1 <- as.numeric(a1)
+a2 <- as.numeric(a2)
+cor.test(a1,a2, method = "s", alternative = "g")
+cor.test(a1, a2, method = "k", alternative = "g")
+
+
+'''
+H0:  la antigüedad de la vivienda y el consumo mensual de electricidad en el
+    mes de enero son independientes (no relacionadas)
+H1:  la antigüedad de la vivienda y el consumo mensual de electricidad en el 
+    mes de enero no son independientes (si relacionadas)
+
+alfa = 0.03
+pvalor = 0.3812 > 0.03
+Conclusión: A un alfa = 0.03, No podemos afirmar que la antigüedad de la 
+vivienda y el consumo mensual de electricidad en el mes de enero esten
+relacionadas.
+'''
+
+
+# EJERCICIO 8 - MEDIDAS DE ASOCIACIÓN
+
+cor.test(olivos$Opinión1,olivos$Opinión2, method = "s", alternative = "g")
+cor.test(olivos$Opinión1,olivos$Opinión2, method = "k", alternative = "g")
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,174 @@
+pc26 <- read_xlsx("PC1_2026_2.xlsx")
+
+antes <- subset(pc26, Momento == "Antes")
+desp <- subset(pc26, Momento == "Después")
+
+
+# EJERCICIO 1 - PRUEBA DE FRECUENCIAS
+
+fem <- subset(pc26, Género == "Femenino")
+
+table(fem$Modalidad)
+probas <- c(2/9,4/9,3/9)
+library(DescTools)
+multinomial.test(as.vector(table(fem$Modalidad)), p = probas)
+
+
+'''
+HO: pres = 4/9 , hib = 2/9 , rem = 3/9
+H1: Al menos una proporción es diferente a los valores establecidos.
+alfa = 0.04
+pvalor = 2.2x10^-16 < 0.04
+COnclusión: A un alfa = 0.04, podemos afirmar que Al menos una proporción es 
+diferente a los valores establecidos, por lo tanto si se buscará homogenizar
+la modalidad de trabajo.
+'''
+
+# EJERCICIO 2 - BINOMIAL
+
+mascu <- subset(desp, Género == "Masculino")
+mas_alta <- subset(mascu, Presion >= 120 & Presion <= 129)
+#View(mas_alta)
+# presion elevada
+length(mas_alta$Presion)
+
+# presion normal
+sum(mascu$Presion<120)
+length(mascu$Presion)
+
+#mas_pe <- ifelse(mascu$Presion >= 120 & mascu$Presion <= 129, 1,0)
+#length(mas_pe)
+
+binom.test(17,47,0.5,alternative = "l")
+
+binom.test(15,47,conf.level = 0.96)$conf
+
+'''
+HO: pi = 0.50
+H1: pi < 0.50
+alfa = 0.04
+pvalor = 0.03947 < 0.04
+Conclusión: A un alfa = 0.0.4, podemos afirmar que la proporción de desarrolladores
+del genero masculino que tienen una presion arterial elevada despues de finalizado
+el programa es menor al 50%.
+
+IC al 96%:
+IC = [0.1858846 ; 0.4780594]
+'''
+
+
+# EJERCICIO 3 - sTUART MAXWELL
+
+fema <- subset(antes, Género == "Femenino")
+femd <- subset(desp, Género == "Femenino")
+
+StuartMaxwellTest(fema$Estrés, femd$Estrés)
+
+
+'''
+H0: El programa no tuvo un efecto sign en el nivel de estres
+H1: El programa tuvo un efecto sign en el nivel de estres
+alfa = 0.04
+pvalor = 4.017x10^-06 < 0.04
+COnclusión: A un alfa = 0.04, Podemos afirmar que el programa tuvo un efecto
+significativo en el nivel de estres en las desarrolladoras de software del
+genero femenino, por lo tanto se tendrá que repetir el programa el proximo año.
+'''
+
+# EJERCICIO 4 - MEDIDA DE ASOCIACION SPEARMAN
+
+masc <- subset(antes, Género == "Masculino")
+table(masc$Estrés, masc$Sueño)
+d1 <- factor(masc$Estrés, levels = c("Bajo","Medio","Alto"), ordered = T)
+d2 <- factor(masc$Sueño, levels = c("Mala","Regular","Buena"), ordered = T)
+
+d1 <- as.numeric(d1)
+d2 <- as.numeric(d2)
+cor.test(d1, d2, method = "s", alternative = "l")
+
+
+'''
+H0: rho = 0
+H1: rho < 0
+alfa = 0.04
+pvalor = 0.6911 > 0.04
+Conclusión: A un alfa = 0.04, No podemos afirmar que a mayor nivel de estres
+menor sea la calidad de sueño para los desarrolladores de software del genero
+masculino, por lo tanto no se contratará a un psicologo.
+'''
+
+# EJERCICIO 5 - PRUEBA EXACTA DE FISHER
+
+table(desp$Género,desp$Sintomas)
+matriz <- matrix(c(15,32,18,35), nrow = 2, ncol = 2)
+fisher.test(matriz, alternative = "g")
+
+
+'''
+HO: pi_masc <= pi_fem
+H1: pi_masc > pi_fem
+alfa = 0.04
+pvalor = 0.6659 > 0.04
+Conclusión: A un alfa = 0.04, No podemos afirmar que la proporción de desarr.
+con sintomas osteom. del genero masculino sea superior a las desarr. con sint.
+osteom. del género femenino, por lo tanto no se implementará el area de 
+relajación.
+'''
+
+# EJERCICIO 6 - MHC
+
+des6 <- ifelse(desp$Pasos < 6000,1,0)
+mantelhaen.test(desp$Sintomas, des6, desp$Género)
+
+'''
+H0: pi_osteo_6pasos_masc = pi_osteo_6pasos_fem
+H1: pi_osteo_6pasos_masc != pi_osteo_6pasos_fem
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

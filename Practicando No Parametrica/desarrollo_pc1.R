@@ -1,0 +1,225 @@
+library(readxl)
+library(DescTools)
+library(exact2x2)
+library(RVAideMemoire)
+
+pc1 <- read_xlsx("PC1.xlsx")
+
+# EJERCICIO 1 - CORRELACION DE SPEARMAN
+
+sur <- subset(pc1, sede == "Sur")
+s1 <- as.numeric(as.factor(sur$satisfacción1))
+s2 <- as.numeric(as.factor(sur$satisfacción2))
+cor.test(s1, s2, method = "s",
+         alternative = "g")
+
+
+'''
+Ho: rho <= 0
+H1: rho >  0
+
+alfa = 0.04
+
+pvalor = 0.03941 < 0.04
+
+conclusion: A un alfa = 0.03 podemos afirmar que existe una relacion directa
+entre la satisfacción del cliente con respecto a las instalaciones y la 
+satisfacción del cliente con respecto al personal.
+
+'''
+
+# PREGUNTA 2 - STUART MAXWELL
+este <- subset(pc1, sede == "Este")
+
+table(este$consulta1, este$consulta2)
+
+StuartMaxwellTest(table(este$consulta1, este$consulta2))
+StuartMaxwellTest(este$consulta1, este$consulta2)
+
+'''
+H0: El gimnasio no tuvo un efecto significativo en la sensacion del cliente
+H1: El gimnasio si tuvo un efecto significativo en la sensacion del cliente
+
+alfa = 0.04
+
+pvalor = 0.9612 > 0.04
+
+conclusion: A un alfa = 0.04, no podemos afirmar que el gimnasio haya tenido
+un efecto signiticativo sobre la sensación del cliente, por lo tanto el gym
+no está cumpliendo una buena labor.
+'''
+
+# PREGUNTA 3 - FRECUENCIAS
+centro <- subset(pc1, sede == "Centro")
+table(centro$contacto)
+probas <- c(0.3,0.2,0.5)
+
+# aprox
+chisq.test(x = table(centro$contacto), p = probas)
+# exacto
+multinomial.test(as.vector(table(centro$contacto)), probas)
+
+
+'''
+H0: pi_email = 0.3, pi_wsp = 0.5, pi_llamada = 0.2
+H1: Al menos una proporcion es diferente a lo especificado
+
+alfa = 0.04
+
+pvalor = 0.0003871 < 0.04
+
+conclusion: A un alfa = 0.04, podemos afirmar que al menos una proporcion es
+diferente a las establecidas, por lo tanto se debe mejorar el sistema de
+información.
+'''
+
+# PREGUNTA 4 - BINOMIAL
+
+norte <- subset(pc1, sede == "Norte")
+table(norte$pago)
+33+24+31
+binom.test(46,134,0.35,alternative = "l")
+
+binom.test(88,134,conf.level = 0.96)$conf
+
+
+'''
+H0: Pi_norte_efectivo = 0.35
+H1: Pi_norte_efectivo < 0.35
+
+alfa = 0.04
+
+pvalor = 0.4747 > 0.04
+
+conclusion = A un alfa = 0.04, No podemos afirmar que la proporción de clientes
+que pagan en efectivo sea menor al 35%, por lo tanto la afirmacion del jefe de
+marketing es incorrecta.
+
+IC al 95%:
+
+IC = [0.5657; 0.7399]
+'''
+
+
+# PREGUNTA 5 - MHC
+# solo piden norte, centro o sur, debemos quitar "Este"
+
+ncs <- subset(pc1, sede != "Este")
+yoga <- ifelse(ncs$actividad == "Yoga","Si","No")
+
+table(ncs$género, yoga, ncs$sede)
+
+mantelhaen.test(table(ncs$género, yoga, ncs$sede), correct = T, exact = T)
+
+'''
+H0: pi_ff_yg = pi_fm_yg
+H1: pi_ff_yg != pi_fm_yg
+
+alfa = 0.04
+
+pvalor = 0.01847 < 0.04
+
+conclusion: A un alfa = 0.04, podemos afirmar que la proporcion de clientes que
+prefieren yoga es diferente en al menos una de las siguientes sedes:
+norte, centro o sur
+'''
+
+# PREGUNTA 6 -  FISHER
+
+table(pc1$sede, pc1$nivel)
+m <- matrix(c(30,77,34,100), nrow = 2, ncol = 2)
+fisher.exact(m, alternative = "l")
+fisher.test(m, alternative = "l")
+31+18+28
+42+26+32
+'''
+H0: Pi_princ_sur = Pi_princ_nor
+H1: Pi_princ_sur < Pi_princ_nor
+
+alfa = 0.04
+
+pvalor = 0.7302 > 0.04
+
+conclusion: A un alfa = 0.04, No podemos afirmar que la proporcion de clientes
+de nivel pricipiante de la sede sur sea menor que la proporcion de clientes de 
+nivel princpiante de la sede norte
+'''
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
