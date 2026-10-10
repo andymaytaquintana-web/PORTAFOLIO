@@ -1,6 +1,6 @@
 # 📊 Data Analytics Portfolio
 
-¡Hola! Soy [Tu Nombre], un apasionado del análisis de datos en constante aprendizaje. 
+¡Hola! Soy Andy, un apasionado del análisis de datos en constante aprendizaje. 
 Este repositorio es mi espacio de práctica y evolución, donde documento ejercicios, 
 proyectos y avances en diversas herramientas de análisis y visualización de datos.
 
@@ -18,5 +18,3 @@ de ejercicios prácticos y proyectos aplicados al mundo real.
 | **SQL** | ⭐⭐⭐ | Consultas, joins, subconsultas, optimización, stored procedures |
 | **R** | ⭐⭐ | Análisis estadístico, ggplot2, dplyr, tidyr |
 | **Tableau** | ⭐⭐ | Visualizaciones, dashboards, storyboarding |
-
-## 📁 Estructura del Repositorio
