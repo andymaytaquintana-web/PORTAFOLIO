@@ -14,7 +14,7 @@ de ejercicios prácticos y proyectos aplicados al mundo real.
 |-------------|-------|-------------------|
 | **Excel** | ⭐⭐⭐⭐ | Limpieza de datos, tablas dinámicas, dashboards, Power Query, macros |
 | **Power BI** | ⭐⭐⭐⭐ | Modelado de datos, DAX, visualizaciones interactivas, ETL |
+| **R** | ⭐⭐⭐⭐ | Análisis estadístico, ggplot2, dplyr, tidyr |
 | **Python** | ⭐⭐⭐ | Pandas, NumPy, Matplotlib, Seaborn, automatización |
 | **SQL** | ⭐⭐⭐ | Consultas, joins, subconsultas, optimización, stored procedures |
-| **R** | ⭐⭐ | Análisis estadístico, ggplot2, dplyr, tidyr |
 | **Tableau** | ⭐⭐ | Visualizaciones, dashboards, storyboarding |
